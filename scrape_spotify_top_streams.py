@@ -30,7 +30,7 @@ def artist_top_stream_songs(url: str):
               "div[2]/div[3]/div[1]/div/div/button/div")
 
     body_html = driver.find_element(By.TAG_NAME, "html")
-
+    print("starting to scrape artist 10 most stream songs")
     try:
         # click see more button
         # driver.execute_script("arguments[0].click();",driver.find_element(By.XPATH, x_path))
@@ -52,11 +52,11 @@ def artist_top_stream_songs(url: str):
 
         # close drive
         driver.quit()
-
+        print("done")
         return most_stream_songs
 
     except Exception as e:
-        print(e)
+        print(f"error occurred while scraping most tream songs {e}")
 
         driver.quit()
         return None

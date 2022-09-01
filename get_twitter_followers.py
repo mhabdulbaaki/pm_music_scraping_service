@@ -49,22 +49,39 @@ def get_public_metrics(url: str, headers: dict, params: dict):
     return response.json()
 
 
-def twitter_followers_count(artist_twitter_handle: str):
-    """takes user twitter handle and returns the followers count for the user"""
-    # get bearer tokens
-    bearer_token_url = create_bearer_token_url()
-    bearer_url_params = get_bearer_params()
-    bearer_token = get_twitter_access_token(url=bearer_token_url, params=bearer_url_params)
+def twitter_followers_count(artist_twitter_handle: str = None, url: str = None):
+    """takes user twitter handle [e.g @mhabdulbaaki] and returns the followers count for the user"""
 
-    # get public metrics
-    metrics_url = create_metrics_url(user_name=artist_twitter_handle)
-    metrics_params = get_metrics_params()
-    metrics_headers = get_metrics_headers(bearer_token=bearer_token)
+    # return None if both url & handle are none
+    if not artist_twitter_handle and not url:
+        return None
 
-    json_response = get_public_metrics(url=metrics_url, headers=metrics_headers, params=metrics_params)
-    return json_response["data"]["public_metrics"]["followers_count"]
+    # strip @ sign of handle
+    if artist_twitter_handle and "@" in artist_twitter_handle:
+        artist_twitter_handle = artist_twitter_handle.lstrip("@")
+
+    # get handle from url
+    if url:
+        artist_twitter_handle = url.strip("/").split("/")[-1]
+
+    try:
+        # get bearer tokens
+        bearer_token_url = create_bearer_token_url()
+        bearer_url_params = get_bearer_params()
+        bearer_token = get_twitter_access_token(url=bearer_token_url, params=bearer_url_params)
+
+        # get public metrics
+        metrics_url = create_metrics_url(user_name=artist_twitter_handle)
+        metrics_params = get_metrics_params()
+        metrics_headers = get_metrics_headers(bearer_token=bearer_token)
+
+        json_response = get_public_metrics(url=metrics_url, headers=metrics_headers, params=metrics_params)
+        return {"followers_count": json_response["data"]["public_metrics"]["followers_count"]}
+    except Exception as e:
+        print(f"an error occurred while fetching twitter followers count: \n{e}")
+        return None
 
 
 if __name__ == "__main__":
-    r = twitter_followers_count(artist_twitter_handle="mhabdulbaaki")
-    print(f'followers_count: {type(r)}')
+    r = twitter_followers_count(artist_twitter_handle="@mhabdulbaaki")
+    print(r)

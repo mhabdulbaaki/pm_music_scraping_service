@@ -17,19 +17,23 @@ def facebook_followers(driver, url: str = None):
 
     print("now scraping facebook...")
     if url:
-        driver.get(url)
-        followers_href = url.split("?")[0] + "followers/"
-        followers_href = followers_href.replace("web", "www")
+        try:
+            driver.get(url)
+            followers_href = url.split("?")[0] + "followers/"
+            if "web" not in followers_href:
+                followers_href = followers_href.replace("facebook.com", "web.facebook.com")
 
-        html_tag = driver.find_element(By.TAG_NAME, "html")
-        html = html_tag.get_attribute("outerHTML")  # returns entire html page for the fb url
+            html_tag = driver.find_element(By.TAG_NAME, "html")
+            html = html_tag.get_attribute("outerHTML")  # returns entire html page for the fb url
 
-        soup = BeautifulSoup(html, "html.parser")  # parse html
-        a_tag = soup.find(attrs={"href": f"{followers_href}"})  # finds <a> tag with followers information
+            soup = BeautifulSoup(html, "html.parser")  # parse html
+            a_tag = soup.find(attrs={"href": f"{followers_href}"})  # finds <a> tag with followers information
 
-        followers = a_tag.get_text()  # extracts the followers string
-        return followers
-
+            followers = a_tag.get_text()  # extracts the followers string
+            return followers
+        except Exception as e:
+            print(f"error scraping facebook: \n{e}")
+            return None
     return None
 
 
@@ -78,7 +82,7 @@ def tiktok_followers(driver, url: str = None):
 def social_media_metrics(ig_url: str = None, fb_url: str = None, tiktok_url: str = None):
     """returns dictionary of facebook, instagram, and tiktok followers count.
     return None if no url or invalid url is found"""
-    # driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),
                               options=options)  # headless driver
     meta_metrics = {}
@@ -112,8 +116,8 @@ def social_media_metrics(ig_url: str = None, fb_url: str = None, tiktok_url: str
 
 
 if __name__ == "__main__":
-    tiktok = "https://www.tiktok.com/@planetmoney"
-    facebook_url = "https://web.facebook.com/YusufCatStevens/?_rdc=1&_rdr"
+    tiktok = "https://www.tiktok.com/@sarkodie.official?lang=en"
+    facebook_url = "https://facebook.com/YusufCatStevens/?_rdc=1&_rdr"
     instagram_url = "https://www.instagram.com/yusufcatstevens/"
 
     result = social_media_metrics(ig_url=instagram_url, fb_url=facebook_url, tiktok_url=tiktok)

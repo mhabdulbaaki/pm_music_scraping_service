@@ -20,6 +20,7 @@ def get_artist_media_handles(spotify_url: str):
     returns a dictionary of artist social media handles
     returns None if error occurs
     """
+    print("starting to scrape active monthly listeners... \n")
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()),
                               options=options)  # headless driver
     driver.get(spotify_url)
@@ -46,6 +47,7 @@ def get_artist_media_handles(spotify_url: str):
 
         # get social media links
         social_media_platforms = ["Twitter", "Facebook", "Instagram"]
+        print(f"scraping artist media handles: {social_media_platforms}")
         for platform in social_media_platforms:
             sm_tag = body.find("span", string=platform)
             if sm_tag:
@@ -54,6 +56,7 @@ def get_artist_media_handles(spotify_url: str):
                 media_handles[platform.lower()] = None
                 continue
         driver.quit()
+        print("done scraping media handles")
         return media_handles
 
     except Exception as e:
