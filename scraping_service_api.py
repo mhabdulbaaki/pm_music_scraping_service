@@ -1,27 +1,31 @@
-from flask import Flask, request
-from flask_restful import reqparse, Api, Resource
-from get_twitter_followers import twitter_followers_count
-from search_artist_on_spotify import spotify_search_artist
-
-app = Flask(__name__)
-api = Api(app)
-
-todos = {}
-
-
-class TodoSimple(Resource):
-
-    def get(self, todo_id):
-        return {todo_id: todos[todo_id]}
-
-    def put(self, todo_id):
-        todos[todo_id] = request.form['data']
-        fc = twitter_followers_count(artist_twitter_handle="mhabdulbaaki")
-        artist = spotify_search_artist(name="sarkodie")
-        return {todo_id: todos[todo_id], "count": fc, **artist}
-
-
-api.add_resource(TodoSimple, '/<string:todo_id>')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# from flask import Flask
+# from flask_restful import reqparse, Api, Resource
+# from get_artist_media_performance_metrics import get_artist_stats
+#
+# app = Flask(__name__)
+# api = Api(app)
+#
+#
+# parser = reqparse.RequestParser()
+#
+# parser.add_argument("spotifyURL", location="args", required=True)
+# parser.add_argument("twitterURL", location="args")
+# parser.add_argument("instagramURL", location="args")
+# parser.add_argument("tiktokURL", location="args")
+# parser.add_argument("fbURL", location="args")
+# parser.add_argument("URL", location="args")
+#
+#
+# class ArtistStats(Resource):
+#
+#     def get(self):
+#         args = parser.parse_args()
+#         data = get_artist_stats(spotify_url=args["spotifyURL"])
+#         if data:
+#             return {"data": data}, 200
+#
+#
+# api.add_resource(ArtistStats, '/artist')
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)
