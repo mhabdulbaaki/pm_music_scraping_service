@@ -5,6 +5,7 @@ from get_spotify_data import artist_spotify_data
 from get_twitter_followers import twitter_followers_count
 from get_youtube_stats import get_youtube_metrics
 from scrape_social_platforms import tiktok_followers, facebook_followers, instagram_followers
+from scrape_soundcloud import soundcloud_followers
 import pprint
 
 options = webdriver.ChromeOptions()
@@ -14,7 +15,7 @@ options.add_argument('--headless')
 
 
 def get_artist_stats(spotify_url: str, fb: str = None, tiktok: str = None,
-                     twitter: str = None, instagram: str = None,
+                     twitter: str = None, instagram: str = None, soundcloud: str = None,
                      youtube: str = None, twitter_handle: str = None):
     """ returns the artist stats across different platforms"""
 
@@ -42,8 +43,11 @@ def get_artist_stats(spotify_url: str, fb: str = None, tiktok: str = None,
         # YouTube stats
         youtube_data = get_youtube_metrics(channel_url=youtube)
 
-        # get tiktok facebook and instagram
+        # get tiktok
         tiktok_data = tiktok_followers(driver=driver, url=tiktok)
+
+        # soundcloud data
+        soundcloud_data = soundcloud_followers(driver=driver, url=soundcloud)
 
         driver.quit()  # quit driver
         return {
@@ -52,7 +56,8 @@ def get_artist_stats(spotify_url: str, fb: str = None, tiktok: str = None,
             "facebook_data": facebook_data,
             "tiktok_data": tiktok_data,
             "instagram_data": instagram_data,
-            "youtube_data": youtube_data
+            "youtube_data": youtube_data,
+            "soundcloud_data": soundcloud_data
         }
     except Exception as e:
         print(f"an error occurred while fetching artist stats: \n {e}")
@@ -61,5 +66,6 @@ def get_artist_stats(spotify_url: str, fb: str = None, tiktok: str = None,
 
 if __name__ == "__main__":
     pp = pprint.PrettyPrinter(indent=2)
-    r = get_artist_stats(spotify_url="https://open.spotify.com/artist/01DTVE3KmoPogPZaOvMqO8")
+    r = get_artist_stats(spotify_url="https://open.spotify.com/artist/01DTVE3KmoPogPZaOvMqO8",
+                         soundcloud="https://soundcloud.com/sarkodie-music")
     pp.pprint(r)

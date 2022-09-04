@@ -13,7 +13,8 @@ parser.add_argument("twitterURL", location="args")
 parser.add_argument("instagramURL", location="args")
 parser.add_argument("tiktokURL", location="args")
 parser.add_argument("fbURL", location="args")
-parser.add_argument("URL", location="args")
+parser.add_argument("youtubeURL", location="args")
+parser.add_argument("soundcloudURL", location="args")
 
 
 class ArtistStats(Resource):
