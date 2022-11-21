@@ -21,7 +21,15 @@ class ArtistStats(Resource):
 
     def get(self):
         args = parser.parse_args()
-        data = get_artist_stats(spotify_url=args["spotifyURL"])
+        data = get_artist_stats(
+            spotify_url=args["spotifyURL"],
+            soundcloud=args["soundcloudURL"],
+            youtube=args["youtubeURL"],
+            twitter=args["twitterURL"],
+            instagram=args["instagramURL"],
+            fb=args["fbURL"],
+            tiktok=args["tiktokURL"],
+        )
         if data:
             return {"data": data}, 200
 
